@@ -14,7 +14,7 @@ class CompleteState extends State<Complete>{
           title: const Text("Todo"),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.delete),
               onPressed: () => {},
             )
           ],

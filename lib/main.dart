@@ -1,3 +1,4 @@
+import 'package:final_exam/ui/NewSubject.dart';
 import 'package:final_exam/ui/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:final_exam/ui/Home.dart';
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => LogIn(),
         "/signUp": (context) => SignUp(),
-        "/home": (context) => Home()
+        "/home": (context) => Home(),
+        "/newSub": (cintext) => NewSubject()
       },
     );
   }

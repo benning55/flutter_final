@@ -15,7 +15,7 @@ class TodoListState extends State<TodoList>{
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: () => {},
+              onPressed: () => Navigator.pushReplacementNamed(context, '/newSub'),
             )
           ],
         ),
