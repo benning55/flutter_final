@@ -111,8 +111,7 @@ class LogInState extends State<LogIn> {
                           ).show();
                           debugPrint('You almost there');
                         }else{
-                          debugPrint(users[0].username);
-                          debugPrint(users.length.toString());
+                          Navigator.pushReplacementNamed(context, '/home');
                         }
                       }
                     },
