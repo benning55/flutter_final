@@ -1,10 +1,9 @@
-import 'dart:collection';
-
 import 'package:final_exam/dbms/DatabaseManage.dart';
 import 'package:final_exam/models/Users.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -66,38 +65,19 @@ class LogInState extends State<LogIn> {
                     obscureText: true,
                     validator: (value){},
                   ),
-                  RaisedButton(
-                    child: Text("LOGIN"),
-                    onPressed: () async {
-                      _formKey.currentState.validate();
-                      if(_usernameControl.text.isEmpty || _passwordControl.text.isEmpty){
-                        Alert(
-                          context: context,
-                          type: AlertType.error,
-                          title: "Error",
-                          desc: "Please enter all username and password.",
-                          buttons: [
-                            DialogButton(
-                              child: Text(
-                                "ok",
-                                style: TextStyle(color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              width: 120,
-                            )
-                          ],
-                        ).show();
-                      }else{
-                        List<Users> test = new List();
-                        DatabaseManage db = new DatabaseManage();
-                        var users = await db.getLogInUser(_usernameControl.text, _passwordControl.text);                 
-                        //users.forEach((user) => print(user));
-                        if(users == null){
-                            Alert(
+                  SizedBox(
+                    width: double.infinity,
+      
+                    child: RaisedButton(
+                      child: Text("LOGIN"),
+                      onPressed: () async {
+                        _formKey.currentState.validate();
+                        if(_usernameControl.text.isEmpty || _passwordControl.text.isEmpty){
+                          Alert(
                             context: context,
                             type: AlertType.error,
                             title: "Error",
-                            desc: "Username and Password not correct or User not in system.",
+                            desc: "Please enter all username and password.",
                             buttons: [
                               DialogButton(
                                 child: Text(
@@ -109,25 +89,55 @@ class LogInState extends State<LogIn> {
                               )
                             ],
                           ).show();
-                          debugPrint('You almost there');
                         }else{
-                          Navigator.pushReplacementNamed(context, '/home');
-                        }
-                      }
-                    },
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        new TextSpan(
-                          text: "Don't have any account?",
-                          style: new TextStyle(color: Colors.blue),
-                          recognizer: new TapGestureRecognizer()
-                          ..onTap = (){
-                            Navigator.pushReplacementNamed(context, '/signUp');
+                          List<Users> test = new List();
+                          DatabaseManage db = new DatabaseManage();
+                          var users = await db.getLogInUser(_usernameControl.text, _passwordControl.text);               
+                          debugPrint(users[0].id.toString());
+                          debugPrint(users[0].username);
+                          debugPrint(users[0].name);
+                          if(users == null){
+                              Alert(
+                              context: context,
+                              type: AlertType.error,
+                              title: "Error",
+                              desc: "Username and Password not correct or User not in system.",
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    "ok",
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  width: 120,
+                                )
+                              ],
+                            ).show();
+                            debugPrint('You almost there');
+                          }else{
+                            int u_id = users[0].id;
+                            //prefs.remove('user');
+                            saveUser(u_id);
                           }
-                        )
-                      ]
+                        }
+                      },
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: "Don't have any account?",
+                            style: new TextStyle(color: Colors.blue),
+                            recognizer: new TapGestureRecognizer()
+                            ..onTap = (){
+                              Navigator.pushReplacementNamed(context, '/signUp');
+                            }
+                          )
+                        ]
+                      ),
                     ),
                   )
                 ],
@@ -139,6 +149,23 @@ class LogInState extends State<LogIn> {
     );
   }
 
+  Future<bool> saveUserPreference(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt("ID", id);
+    return prefs.commit();
+  }
+
+  Future<int> getUserPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int user_id = prefs.getInt("ID");
+    return user_id;
+  }
+
+  void saveUser(int id) {
+    saveUserPreference(id).then((bool committed){
+      Navigator.of(context).pushReplacementNamed("/home");
+    });
+  }
   
 
 }

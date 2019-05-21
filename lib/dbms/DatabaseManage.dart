@@ -51,7 +51,7 @@ class DatabaseManage {
     final List<Map<String, dynamic>> result = await dbClient.query(userTable,
       columns: [colId, colName, colUser, colPass]);
     return List.generate(result.length, (i) {
-      return Users.getValue(result[i]['name'], result[i]['username'], result[i]['password']);
+      return Users.getValue(result[i]['id'], result[i]['name'], result[i]['username'], result[i]['password']);
     });
   }
 
@@ -64,7 +64,20 @@ class DatabaseManage {
         return null;
       }else{
         return List.generate(maps.length, (i){
-          return Users.getValue(maps[i]['name'], maps[i]['username'], maps[i]['password']);
+          return Users.getValue(maps[i]['id'], maps[i]['name'], maps[i]['username'], maps[i]['password']);
+        });
+      }
+  }
+
+  Future<List<Users>> getUserById(int id) async {
+      final dbClient = await db;
+      final List<Map<String, dynamic>> maps = await dbClient.rawQuery("SELECT * FROM users WHERE id=?", [id]);
+      debugPrint(maps.length.toString());
+      if(maps.length.toString() == '0'){
+        return null;
+      }else{
+        return List.generate(maps.length, (i){
+          return Users.getValue(maps[i]['id'], maps[i]['name'], maps[i]['username'], maps[i]['password']);
         });
       }
   }

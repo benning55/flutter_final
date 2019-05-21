@@ -35,7 +35,8 @@ class Users {
     this._password = map['password'];
   }
 
-  Users.getValue(name, username, password){
+  Users.getValue(id, name, username, password){
+    this._id = id;
     this._name = name;
     this._username = username;
     this._password = password;

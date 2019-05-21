@@ -133,6 +133,7 @@ class SignUpState extends State<SignUp> {
                         bool state = true;
                         var x = await db.getAllUser();
                         for(int i = 0; i < x.length; i++){
+                          debugPrint(x[i].toString());
                           debugPrint(x[i].username);
                           if(x[i].username == _usernameControl.text){
                             state = false;
